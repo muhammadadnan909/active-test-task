@@ -1,0 +1,6 @@
+// SCSS modules first
+@use 'variables';
+@import '~bootstrap/scss/bootstrap';
+
+// Fonts (plain CSS import goes at the end)
+@import url('https://fonts.googleapis.com/css?family=Nunito');
