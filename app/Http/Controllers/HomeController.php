@@ -18,9 +18,20 @@ class HomeController extends Controller
      *
      * @return void
      */
+    private $userId;
+    private $role;
+
     public function __construct()
     {
         $this->middleware('auth');
+
+        if(Auth::guard('user')->check()){
+            $this->userId = Auth::guard('user')->id();
+            $this->role = 'user';
+        }else{
+            $this->userId = Auth::guard('admin')->id();
+            $this->role = 'admin';
+        }
     }
 
     /**
@@ -34,7 +45,6 @@ class HomeController extends Controller
         $page       = request()->get('page', 1);       // ✅ correct way
         $perPage    = 25;                       // results per page
         $from       = ($page - 1) * $perPage;    //offset
-        $userId     = Auth::guard('user')->check() ? Auth::guard('user')->id() : Auth::guard('admin')->id();
 
         if($searchTerm)
         {
@@ -47,7 +57,7 @@ class HomeController extends Controller
 
             if (Auth::guard('user')->check()) {
                 $boolQuery->filter(
-                    Query::term()->field('user_id')->value($userId)
+                    Query::term()->field('user_id')->value($this->userId)
                 );
             }
 
@@ -123,6 +133,7 @@ class HomeController extends Controller
 
 
         $data['posts'] = $paginated;
+        $data ['guard'] = $this->role;
 
         return view('posts.index', $data);
     }
@@ -146,7 +157,9 @@ class HomeController extends Controller
         else if($type == 'folder')
             $record = Folder::findOrFail($id);
 
-        return view('posts.edit', compact('record', 'type'));
+            $guard = $this->role;
+
+        return view('posts.edit', compact('record', 'type', 'guard'));
     }
 
     // Update the post
@@ -164,14 +177,16 @@ class HomeController extends Controller
 
         $record->title   = $request->input('title');
         $record->content = $request->input('content');
+        $record->role    = $this->role;
         $record->save();
 
-        return redirect()->route('home')->with('success', ucfirst($type).' updated successfully.');
+        return redirect()->route($this->role.'.home')->with('success', ucfirst($type).' updated successfully.');
     }
 
     public function create($type)
     {
-        return view('posts.create', compact('type'));
+        $guard = $this->role;
+        return view('posts.create', compact('type', 'guard'));
     }
 
 
@@ -185,6 +200,14 @@ class HomeController extends Controller
 
         $type   =  $request->type;
 
+
+        if(Auth::guard('user')->check()){
+            $userId = Auth::guard('user')->id();
+        }else{
+            $userId = Auth::guard('admin')->id();
+        }
+
+
         if($type == 'post')
             $record = new Post();
         else if($type == 'folder')
@@ -192,9 +215,10 @@ class HomeController extends Controller
 
         $record->title   = $request->input('title');
         $record->content = $request->input('content');
-        $record->user_id = Auth::id(); // Optional if using auth
+        $record->user_id = $this->userId; // Optional if using auth
+        $record->role    = $this->role;
         $record->save();
 
-        return redirect()->route('home')->with('success', ucfirst($type) .' created successfully.');
+        return redirect()->route($this->role.'.home')->with('success', ucfirst($type) .' created successfully.');
     }
 }

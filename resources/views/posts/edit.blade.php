@@ -4,7 +4,7 @@
 <div class="container">
     <h2>Edit {{ ucfirst($type) }}</h2>
 
-    <form method="POST" action="{{ route('posts.update', ['type' => $type, 'id' => $record->id]) }}">
+    <form method="POST" action="{{ route($guard.'.posts.update', ['type' => $type, 'id' => $record->id]) }}">
         @csrf
         @method('PUT')
 
@@ -19,7 +19,7 @@
         </div>
 
         <button class="btn btn-primary">Update</button>
-        <a href="{{ route('home') }}" class="btn btn-secondary">Cancel</a>
+        <a href="#" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
 @endsection

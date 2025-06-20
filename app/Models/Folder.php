@@ -9,7 +9,7 @@ use ElasticScoutDriverPlus\Searchable;
 class Folder extends Model
 {
     use HasFactory, Searchable;
-    protected $fillable = ['title', 'content', 'user_id'];
+    protected $fillable = ['title', 'content', 'user_id', 'role'];
 
     // Relationship: Each post belongs to one user
     public function user()

@@ -3,8 +3,8 @@
 @section('content')
 <div class="container">
     <h2>Search Posts / Folder Records</h2>
-    <a href="{{ route('posts.create', 'post') }}" class="btn btn-success mb-3">Add New Post</a>
-    <a href="{{ route('posts.create', 'folder') }}" class="btn btn-primary mb-3">Add New Folder</a>
+    <a href="{{ route($guard.'.posts.create', 'post') }}" class="btn btn-success mb-3">Add New Post</a>
+    <a href="{{ route($guard.'.posts.create', 'folder') }}" class="btn btn-primary mb-3">Add New Folder</a>
 
     @if (session('success'))
         <div class="alert alert-success">
@@ -33,7 +33,7 @@
                 <tr>
                     <th>Title</th>
                     <th>Content</th>
-                    <th>Username</th>
+                    <th>User Role</th>
                     <th>Model</th>
                     <th>Update At</th>
                     <th>Action</th>
@@ -44,14 +44,14 @@
                     <tr>
                         <td>{{ $post->title }}</td>
                         <td>{{ Str::limit($post->content, 100) }}</td>
-                        <td>{{ $post->user->name ?? 'Unknown' }}</td>
+                        <td>{{ $post->role ? ucfirst($post->role) :  'Unknown' }}</td>
                         <td>{{ ucfirst($post->type) }}</td>
                         <td>{{ $post->updated_at->diffForHumans() }}</td>
                         <td>
                                 <div style="display: flex; gap: 5px; align-items: center;">
-                                    <a href="{{ route('posts.edit',  ['type' => $post->type, 'id' => $post->id]) }}" class="btn btn-sm btn-warning">Edit</a>
+                                    <a href="{{ route($guard.'.posts.edit',  ['type' => $post->type, 'id' => $post->id]) }}" class="btn btn-sm btn-warning">Edit</a>
 
-                                    <form action="{{ route('posts.destroy', ['type' => $post->type, 'id' => $post->id]) }}" method="POST" onsubmit="return confirm('Are you sure?')">
+                                    <form action="{{ route($guard.'.posts.destroy', ['type' => $post->type, 'id' => $post->id]) }}" method="POST" onsubmit="return confirm('Are you sure?')">
                                             @csrf
                                             @method('DELETE')
                                             <button class="btn btn-sm btn-danger">Delete</button>

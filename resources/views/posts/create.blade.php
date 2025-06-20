@@ -4,7 +4,7 @@
 <div class="container">
     <h2>Add New {{ ucfirst($type) }}</h2>
 
-    <form method="POST" action="{{ route('posts.store') }}">
+    <form method="POST" action="{{ route($guard.'.posts.store') }}">
         @csrf
 
         <input type="hidden" name="type" value="{{ $type }}" />
