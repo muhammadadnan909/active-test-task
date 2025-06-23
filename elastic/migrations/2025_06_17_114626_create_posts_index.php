@@ -27,8 +27,8 @@ final class CreatePostsIndex implements MigrationInterface
             $mapping->text('title', [
                 'fields' => [
                     'keyword' => [
-                        'type' => 'keyword',
-                        'ignore_above' => 256,
+                        'type' => 'text',
+                        'analyzer' => 'standard',
                     ],
                 ],
             ]);

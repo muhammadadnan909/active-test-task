@@ -1,5 +1,8 @@
-@extends('layouts.app')
+@php
+    $layout = auth()->guard('admin')->check() ? 'layouts.app-admin' : 'layouts.app';
+@endphp
 
+@extends($layout)
 @section('content')
 <div class="container">
     <h2>Search Posts / Folder Records</h2>

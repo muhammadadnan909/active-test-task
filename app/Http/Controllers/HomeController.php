@@ -77,9 +77,9 @@ class HomeController extends Controller
 
     public function edit($type, $id)
     {
-        if($type == 'post')
+        if($type == 'Post')
             $record = Post::findOrFail($id);
-        else if($type == 'folder')
+        else if($type == 'Folder')
             $record = Folder::findOrFail($id);
 
             $guard = $this->role;

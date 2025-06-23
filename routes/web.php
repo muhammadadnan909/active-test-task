@@ -38,6 +38,8 @@ Auth::routes();
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('login', [LoginController::class, 'login']);
+    Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+
     Route::get('register', [RegisterController::class, 'showRegisterForm'])->name('register');
     Route::post('register', [RegisterController::class, 'register']);
 });
@@ -50,7 +52,7 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
 
 
 Route::middleware(['auth:user'])->prefix('user')->name('user.')->group(function () {
-    Route::get('user/home', [HomeController::class, 'index'])->name('home');
+    Route::get('home', [HomeController::class, 'index'])->name('home');
     Route::delete('/posts/{type}/{id}', [HomeController::class, 'destroy'])->name('posts.destroy');
     Route::get('/posts/{type}/{id}/edit', [HomeController::class, 'edit'])->name('posts.edit');
     Route::put('/posts/{type}/{id}', [HomeController::class, 'update'])->name('posts.update');
@@ -60,7 +62,7 @@ Route::middleware(['auth:user'])->prefix('user')->name('user.')->group(function 
 
 
 Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('user/home', [HomeController::class, 'index'])->name('home');
+    Route::get('home', [HomeController::class, 'index'])->name('home');
     Route::delete('/posts/{type}/{id}', [HomeController::class, 'destroy'])->name('posts.destroy');
     Route::get('/posts/{type}/{id}/edit', [HomeController::class, 'edit'])->name('posts.edit');
     Route::put('/posts/{type}/{id}', [HomeController::class, 'update'])->name('posts.update');

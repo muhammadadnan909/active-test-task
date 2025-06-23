@@ -17,7 +17,7 @@ class SearchService
         $this->paginator = $paginator;
     }
 
-    public function search(string $query = '', int $page = 1, int $perPage = 25): array
+    public function search($query, int $page = 1, int $perPage = 25): array
     {
         $from = ($page - 1) * $perPage;
 
@@ -31,7 +31,7 @@ class SearchService
     private function searchFromElastic(string $query, int $from, int $perPage): array
     {
         $boolQuery = Query::bool()->must(
-            Query::term()->field('title.keyword')->value($query)
+            Query::term()->field('title')->value($query)
         );
 
         if ($this->isUserGuard()) {
