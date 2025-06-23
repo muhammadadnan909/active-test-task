@@ -15,13 +15,16 @@ class Authenticate extends Middleware
 
     protected function redirectTo($request)
     {
+
         if (! $request->expectsJson()) {
             $guard = Arr::first($this->guards);
             switch ($guard) {
                 case 'admin':
-                    return route('admin.login');
+                    return route('admin.home');
+                 case 'user':
+                    return route('admin.home');
                 default:
-                    return route('login');
+                    return route('user.home');
             }
         }
     }
