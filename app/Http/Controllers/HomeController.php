@@ -10,6 +10,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Auth;
 use ElasticScoutDriverPlus\Builders\SearchRequestBuilder;
 use ElasticAdapter\Search\Bucket;
+use App\Services\SearchService;
+use App\Services\PaginationService;
 
 class HomeController extends Controller
 {
@@ -39,98 +41,21 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(SearchService $searchService, PaginationService $paginationService)
     {
         $searchTerm = request()->get('query', ''); // search param
         $page       = request()->get('page', 1);       // ✅ correct way
         $perPage    = 25;                       // results per page
         $from       = ($page - 1) * $perPage;    //offset
 
-        if($searchTerm)
-        {
-            $mustQuery = Query::term()
-              ->field('title.keyword')
-              ->value($searchTerm); // must be exactly the full title string
 
+        $searchTerm = request()->get('query', '');
+        $page = (int) request()->get('page', 1);
+        $perPage = 25;
 
-            $boolQuery = Query::bool()->must($mustQuery);
+        ['combined' => $items, 'total' => $total] = $searchService->search($searchTerm, $page, perPage: $perPage);
 
-            if (Auth::guard('user')->check()) {
-                $boolQuery->filter(
-                    Query::term()->field('user_id')->value($this->userId)
-                );
-            }
-
-
-
-            $postResponse = Post::searchQuery($boolQuery)
-                ->source(['id'])
-                ->from($from)
-                ->size($perPage)
-                ->sort('id', 'desc')
-                ->execute();
-
-            $posts = $postResponse->models();
-            $postTotal = $postResponse->total();
-
-            // Search Folders
-            $folderResponse = Folder::searchQuery($boolQuery)
-                ->source(['id'])
-                ->from($from)
-                ->size($perPage)
-                ->sort('id', 'desc')
-                ->execute();
-
-            $folders = $folderResponse->models();
-            $folderTotal = $folderResponse->total();
-
-            // Add model type manually for rendering
-            $posts->each->setAttribute('type', 'Post');
-            $folders->each->setAttribute('type', 'Folder');
-
-            // Combine and sort
-            $combined = $posts->concat($folders)->sortByDesc('id')->values();
-
-            // Total results (not just combined page)
-            $total = $postTotal + $folderTotal;
-
-            // Paginate manually (note: Elasticsearch pagination per-model; this is approximate)
-            $paginatedItems = $combined->slice(0, $perPage)->values();
-
-
-        }else{
-
-            if (Auth::guard('user')->check()) {
-                $postsQuery = Post::query();
-                $foldersQuery = Folder::query();
-            } else {
-                $postsQuery = Post::query()->where('user_id', Auth::id());
-                $foldersQuery = Folder::query()->where('user_id', Auth::id());
-            }
-            $posts = $postsQuery->get();
-            $folders = $foldersQuery->get();
-            // Add type indicator if needed
-            $posts->each->setAttribute('type', 'post');
-            $folders->each->setAttribute('type', 'folder');
-
-            // Merge, sort, and paginate
-            $concat = $posts->concat($folders)->sortByDesc('id')->values();
-
-            $total = $concat->count();
-            $paginatedItems = $concat->slice($from, $perPage)->values();
-        }
-
-        $paginated = new LengthAwarePaginator(
-            $paginatedItems,
-            $total,
-            $perPage,
-            $page,
-              [
-                    'path'  => url()->current(), // This ensures pagination stays on /search
-                    'query' => request()->query(), // Preserves existing query params like ?query=test
-            ]
-        );
-
+        $paginated = $paginationService->paginate(collect($items), $total, $perPage, $page);
 
         $data['posts'] = $paginated;
         $data ['guard'] = $this->role;
