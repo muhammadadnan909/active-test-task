@@ -27,6 +27,18 @@ use Illuminate\Support\Facades\Auth;
 //     }
 // }); // or use 'auth:admin' if only for admin
 
+
+
+Route::get('/test', function () {
+      $admin = resolve(\SleepingOwl\Admin\Admin::class);
+      $manager = $admin->model(\App\Models\Post::class);
+
+    return $manager instanceof \SleepingOwl\Admin\Contracts\ModelConfigurationInterface
+        ? '✅ Bound correctly'
+        : '❌ Not bound';
+
+});
+
 Route::get('/', function () {
     return view('welcome');
 });

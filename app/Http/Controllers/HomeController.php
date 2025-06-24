@@ -63,7 +63,7 @@ class HomeController extends Controller
         return view('posts.index', $data);
     }
 
-    public function destroy($type, $id)
+    public function destroy($id, $type)
     {
         if($type == 'post')
             $record = Post::findOrFail($id);

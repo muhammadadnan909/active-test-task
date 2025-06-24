@@ -6,6 +6,10 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
 use Carbon\Carbon;
 
+use SleepingOwl\Admin\Contracts\ModelConfigurationInterface;
+use App\Admin\Sections\Posts;
+use App\Models\Post;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -16,6 +20,9 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         //
+         $this->app->bind(ModelConfigurationInterface::class, function ($app) {
+            return new Posts($app, Post::class);
+        });
     }
 
     /**

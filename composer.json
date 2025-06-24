@@ -17,7 +17,8 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.4",
         "laravelrus/sleepingowl": "8.*"
-    },
+
+        },
     "require-dev": {
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
@@ -64,7 +65,7 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "platform": {
-            "php": "8.0.0"
+            "php": "8.0"
         }
     },
     "minimum-stability": "dev",
