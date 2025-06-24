@@ -3,7 +3,8 @@
 namespace App\Providers;
 
 use SleepingOwl\Admin\Providers\AdminSectionsServiceProvider as ServiceProvider;
-
+use App\Models\Post;
+use App\Admin\Sections\Posts as PostSection;
 class AdminSectionsServiceProvider extends ServiceProvider
 {
 
@@ -23,7 +24,12 @@ class AdminSectionsServiceProvider extends ServiceProvider
     public function boot(\SleepingOwl\Admin\Admin $admin)
     {
     	//
+        $admin->registerModel(Post::class, function () {
+        return PostSection::class;
+    });
 
         parent::boot($admin);
     }
+
+
 }
