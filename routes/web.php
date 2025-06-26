@@ -29,15 +29,15 @@ use Illuminate\Support\Facades\Auth;
 
 
 
-Route::get('/test', function () {
-      $admin = resolve(\SleepingOwl\Admin\Admin::class);
-      $manager = $admin->model(\App\Models\Post::class);
+// Route::get('/test', function () {
+//       $admin = resolve(\SleepingOwl\Admin\Admin::class);
+//       $manager = $admin->model(\App\Models\Post::class);
 
-    return $manager instanceof \SleepingOwl\Admin\Contracts\ModelConfigurationInterface
-        ? '✅ Bound correctly'
-        : '❌ Not bound';
+//     return $manager instanceof \SleepingOwl\Admin\Contracts\ModelConfigurationInterface
+//         ? '✅ Bound correctly'
+//         : '❌ Not bound';
 
-});
+// });
 
 Route::get('/', function () {
     return view('welcome');
@@ -65,7 +65,7 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
 
 Route::middleware(['auth:user'])->prefix('user')->name('user.')->group(function () {
     Route::get('home', [HomeController::class, 'index'])->name('home');
-    Route::delete('/posts/{type}/{id}', [HomeController::class, 'destroy'])->name('posts.destroy');
+    Route::delete('/posts/{id}/{type}', [HomeController::class, 'destroy'])->name('posts.destroy');
     Route::get('/posts/{type}/{id}/edit', [HomeController::class, 'edit'])->name('posts.edit');
     Route::put('/posts/{type}/{id}', [HomeController::class, 'update'])->name('posts.update');
     Route::get('/posts/create/{type}', [HomeController::class, 'create'])->name('posts.create');
@@ -75,7 +75,7 @@ Route::middleware(['auth:user'])->prefix('user')->name('user.')->group(function 
 
 Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('home', [HomeController::class, 'index'])->name('home');
-    Route::delete('/posts/{type}/{id}', [HomeController::class, 'destroy'])->name('posts.destroy');
+    Route::delete('/posts/{id}/{type}', [HomeController::class, 'destroy'])->name('posts.destroy');
     Route::get('/posts/{type}/{id}/edit', [HomeController::class, 'edit'])->name('posts.edit');
     Route::put('/posts/{type}/{id}', [HomeController::class, 'update'])->name('posts.update');
     Route::get('/posts/create/{type}', [HomeController::class, 'create'])->name('posts.create');

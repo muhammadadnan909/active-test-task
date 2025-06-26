@@ -28,6 +28,13 @@ return [
         'url'   => route('admin.dashboard'),
     ],
 
+     [
+        'title' => 'Posts',
+        'icon'  => 'fas fa-newspaper',
+        'url'   => '/admin/posts',
+    ],
+
+
     [
         'title' => 'Information',
         'icon'  => 'fas fa-info-circle',

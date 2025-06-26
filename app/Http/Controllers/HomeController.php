@@ -43,6 +43,7 @@ class HomeController extends Controller
      */
     public function index(SearchService $searchService, PaginationService $paginationService)
     {
+
         $searchTerm = request()->get('query', ''); // search param
         $page       = request()->get('page', 1);       // ✅ correct way
         $perPage    = 25;                       // results per page
@@ -65,6 +66,7 @@ class HomeController extends Controller
 
     public function destroy($id, $type)
     {
+        dd($id, $type);
         if($type == 'post')
             $record = Post::findOrFail($id);
         else if($type == 'folder')

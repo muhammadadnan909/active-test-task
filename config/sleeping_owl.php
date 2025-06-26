@@ -240,6 +240,7 @@ return [
 
     'template' => SleepingOwl\Admin\Templates\TemplateDefault::class,
 
+
     /*
     |--------------------------------------------------------------------------
     |  Default date and time formats

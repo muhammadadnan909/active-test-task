@@ -1,6 +1,7 @@
 <?php
 namespace App\Admin\Sections;
 
+use KodiComponents\Support\Contracts\Initializable;
 use SleepingOwl\Admin\Section;
 use SleepingOwl\Admin\Contracts\Display\DisplayInterface;
 use SleepingOwl\Admin\Display\DisplayDatatablesAsync;
@@ -15,50 +16,84 @@ use SleepingOwl\Admin\Form\Buttons\Cancel;
 use SleepingOwl\Admin\Form\Buttons\Delete;
 use SleepingOwl\Admin\Form\Buttons\Save;
 use SleepingOwl\Admin\Display\Column\Custom;
+use SleepingOwl\Admin\Display\Extension\Actions;
+use SleepingOwl\Admin\Display\Extension\InitExtensions;
 
+use SleepingOwl\Admin\Admin;
 
-class Posts extends Section
+class Posts extends Section implements Initializable
 {
+
     protected $model = Post::class;
     protected $title = 'Posts';
 
+    public function __construct(\Illuminate\Contracts\Foundation\Application $app, $class)
+{
+    parent::__construct($app, $class);
+    $this->initialize(); // Force initialization
+}
+
+     public function initialize()
+    {
+        // v8.x specific initialization
+    }
+
+
+
     public function onDisplay(): DisplayInterface
     {
-        return AdminDisplay::datatablesAsync()
-            ->setName('posts-table')
-            ->setHtmlAttributes(['class' => 'table table-bordered'])
-            ->setDisplaySearch(true)
-            ->setDisplayLength(true)
-            ->with('user') // 👈 this is important!
-            ->setColumns([
-                AdminColumn::text('id', 'ID')
-                ->setWidth('40px')
-                ->setHtmlAttribute('class', 'text-center'),
-                 AdminColumn::text('user.name', 'Username') // 👈 show username
-                ->setWidth('150px')
-                ->setHtmlAttribute('class', 'text-center'),
-                AdminColumn::text('title', 'Title')->setWidth('300px'),
-                AdminColumn::text('content', 'Content'),
-                AdminColumn::datetime('created_at', 'Created At')
-                ->setWidth('170px')
-                ->setHtmlAttribute('class', 'text-center')
-                ->setFormat('Y-m-d H:i:s'),
 
-                AdminColumn::custom('Actions', function ($model) {
-                    $editUrl = route('admin.model.edit', ['posts', $model->id]);
-                    $deleteUrl = route('admin.model.delete', ['posts', $model->id]);
+    $display = AdminDisplay::datatables()
+    ->setName('posts-table')
+    ->setHtmlAttributes(['class' => 'table table-bordered'])
+    ->setDisplaySearch(true)
+    ->setDisplayLength(true)
+    ->with('user')
+    ->setColumns([
+        AdminColumn::text('id', 'ID')
+            ->setHtmlAttribute('style', 'min-width: 50px; max-width: 70px;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;')
+            ->setHtmlAttribute('class', 'text-center'),
 
-                    return <<<HTML
-                        <a href="{$editUrl}" class="btn btn-sm btn-primary">✏️</a>
-                        <form method="POST" action="{$deleteUrl}" style="display:inline;" onsubmit="return confirm('Are you sure?')">
-                            <input type="hidden" name="_token" value="">
-                            <input type="hidden" name="_method" value="DELETE">
-                            <button type="submit" class="btn btn-sm btn-danger">🗑</button>
-                        </form>
-                    HTML;
-                })
-                ->setHtmlAttribute('class', 'text-center')
-                ->setWidth('100px')
-            ]);
+        AdminColumn::text('user.name', 'Username')
+            ->setHtmlAttribute('style', 'min-width: 150px; max-width: 170px ;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'),
+
+        AdminColumn::text('title', 'Title')
+            ->setHtmlAttribute('style', 'min-width: 300px;  max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'),
+
+        AdminColumn::text('content', 'Content')
+            ->setHtmlAttribute('style', 'min-width: 400px; max-width: 754px;  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'),
+
+        AdminColumn::datetime('created_at', 'Created At')
+            ->setHtmlAttribute('style', 'min-width: 170px;  max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;')
+            ->setFormat('Y-m-d H:i:s'),
+
+        AdminColumn::custom('Actions', function ($model) {
+            $editUrl   = route('admin.model.edit', ['posts', $model->id]);
+            $deleteUrl = route('admin.model.delete', ['posts', $model->id]);
+            $csrf      = csrf_token();
+
+            return <<<HTML
+                <a href="{$editUrl}" class="btn btn-sm btn-primary">✏️</a>
+                <form method="DELETE" action="{$deleteUrl}" style="display:inline;" onsubmit="return confirm('Are you sure?')">
+                    <input type="hidden" name="_token" value="{$csrf}">
+                    <button type="submit" class="btn btn-sm btn-danger">🗑</button>
+                </form>
+            HTML;
+        })
+        ->setHtmlAttribute('class', attribute: 'text-center')
+        ->setWidth('250px'),
+
+
+        ]);
+
+                return $display;
+
     }
+
+    public function isDeletable($model)
+    {
+        return false; // disables delete
+    }
+
+
 }
