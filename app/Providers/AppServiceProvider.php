@@ -9,7 +9,8 @@ use Carbon\Carbon;
 use SleepingOwl\Admin\Contracts\ModelConfigurationInterface;
 use App\Admin\Sections\Posts;
 use App\Models\Post;
-
+use SleepingOwl\Admin\Admin;
+use App\Admin\Templates\CustomTemplate;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -26,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Bootstrap any application services.
+     * Bootstrap any application services.s
      *
      * @return void
      */
@@ -34,5 +35,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Carbon::setLocale('de');
         Paginator::defaultView('vendor.pagination.bootstrap-4');
+
     }
 }

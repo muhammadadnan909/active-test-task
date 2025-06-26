@@ -39,6 +39,11 @@ use Illuminate\Support\Facades\Auth;
 
 // });
 
+Route::get('/test', function () {
+    return view('vendor.sleepingowl.default.admin.columns.actions', ['model' => new \App\Models\Post()]);
+});
+
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -65,7 +70,7 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
 
 Route::middleware(['auth:user'])->prefix('user')->name('user.')->group(function () {
     Route::get('home', [HomeController::class, 'index'])->name('home');
-    Route::delete('/posts/{id}/{type}', [HomeController::class, 'destroy'])->name('posts.destroy');
+    Route::post('/posts/{id}/{type}/delete', [HomeController::class, 'destroy'])->name('posts.destroy');
     Route::get('/posts/{type}/{id}/edit', [HomeController::class, 'edit'])->name('posts.edit');
     Route::put('/posts/{type}/{id}', [HomeController::class, 'update'])->name('posts.update');
     Route::get('/posts/create/{type}', [HomeController::class, 'create'])->name('posts.create');
@@ -75,7 +80,7 @@ Route::middleware(['auth:user'])->prefix('user')->name('user.')->group(function 
 
 Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('home', [HomeController::class, 'index'])->name('home');
-    Route::delete('/posts/{id}/{type}', [HomeController::class, 'destroy'])->name('posts.destroy');
+    Route::post('/posts/{id}/{type}/delete', [HomeController::class, 'destroy'])->name('posts.destroy');
     Route::get('/posts/{type}/{id}/edit', [HomeController::class, 'edit'])->name('posts.edit');
     Route::put('/posts/{type}/{id}', [HomeController::class, 'update'])->name('posts.update');
     Route::get('/posts/create/{type}', [HomeController::class, 'create'])->name('posts.create');

@@ -8,7 +8,6 @@
     <h2>Search Posts / Folder Records</h2>
     <a href="{{ route($guard.'.posts.create', 'post') }}" class="btn btn-success mb-3">Add New Post</a>
     <a href="{{ route($guard.'.posts.create', 'folder') }}" class="btn btn-primary mb-3">Add New Folder</a>
-
     @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
@@ -56,7 +55,6 @@
 
                                     <form action="{{ route($guard.'.posts.destroy', ['type' => $post->type, 'id' => $post->id]) }}" method="POST" onsubmit="return confirm('Are you sure?')">
                                             @csrf
-                                            @method('DELETE')
                                             <button class="btn btn-sm btn-danger">Delete</button>
                                     </form>
                                 </div>

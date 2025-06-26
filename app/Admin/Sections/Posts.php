@@ -18,6 +18,8 @@ use SleepingOwl\Admin\Form\Buttons\Save;
 use SleepingOwl\Admin\Display\Column\Custom;
 use SleepingOwl\Admin\Display\Extension\Actions;
 use SleepingOwl\Admin\Display\Extension\InitExtensions;
+use Illuminate\Support\Facades\Session;
+
 
 use SleepingOwl\Admin\Admin;
 
@@ -43,50 +45,41 @@ class Posts extends Section implements Initializable
     public function onDisplay(): DisplayInterface
     {
 
-    $display = AdminDisplay::datatables()
-    ->setName('posts-table')
-    ->setHtmlAttributes(['class' => 'table table-bordered'])
-    ->setDisplaySearch(true)
-    ->setDisplayLength(true)
-    ->with('user')
-    ->setColumns([
-        AdminColumn::text('id', 'ID')
-            ->setHtmlAttribute('style', 'min-width: 50px; max-width: 70px;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;')
-            ->setHtmlAttribute('class', 'text-center'),
+        $display =AdminDisplay::datatablesAsync()
+            ->setName('posts')
+            ->setHtmlAttributes(['class' => 'table table-bordered'])
+            ->setDisplaySearch(true)
+            ->setDisplayLength(true)
+            ->with('user')
+            ->setColumns([
+                AdminColumn::text('id', 'ID')
+                    ->setHtmlAttribute('style', 'min-width: 50px; max-width: 70px;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;')
+                    ->setHtmlAttribute('class', 'text-center'),
 
-        AdminColumn::text('user.name', 'Username')
-            ->setHtmlAttribute('style', 'min-width: 150px; max-width: 170px ;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'),
+                AdminColumn::text('user.name', 'Username')
+                    ->setHtmlAttribute('style', 'min-width: 150px; max-width: 170px ;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'),
 
-        AdminColumn::text('title', 'Title')
-            ->setHtmlAttribute('style', 'min-width: 300px;  max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'),
+                AdminColumn::text('title', 'Title')
+                    ->setHtmlAttribute('style', 'min-width: 300px;  max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'),
 
-        AdminColumn::text('content', 'Content')
-            ->setHtmlAttribute('style', 'min-width: 400px; max-width: 754px;  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'),
+                AdminColumn::text('content', 'Content')
+                    ->setHtmlAttribute('style', 'min-width: 400px; max-width: 754px;  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'),
 
-        AdminColumn::datetime('created_at', 'Created At')
-            ->setHtmlAttribute('style', 'min-width: 170px;  max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;')
-            ->setFormat('Y-m-d H:i:s'),
+                AdminColumn::datetime('created_at', 'Created At')
+                    ->setHtmlAttribute('style', 'min-width: 170px;  max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;')
+                    ->setFormat('Y-m-d H:i:s'),
 
-        AdminColumn::custom('Actions', function ($model) {
-            $editUrl   = route('admin.model.edit', ['posts', $model->id]);
-            $deleteUrl = route('admin.model.delete', ['posts', $model->id]);
-            $csrf      = csrf_token();
+                AdminColumn::custom('Actions', function ($model) {
+                        // some code...
+                })->setView('admin.columns.actions')
+                ->setHtmlAttribute('class', attribute: 'text-center')
+                ->setWidth('250px'),
 
-            return <<<HTML
-                <a href="{$editUrl}" class="btn btn-sm btn-primary">✏️</a>
-                <form method="DELETE" action="{$deleteUrl}" style="display:inline;" onsubmit="return confirm('Are you sure?')">
-                    <input type="hidden" name="_token" value="{$csrf}">
-                    <button type="submit" class="btn btn-sm btn-danger">🗑</button>
-                </form>
-            HTML;
-        })
-        ->setHtmlAttribute('class', attribute: 'text-center')
-        ->setWidth('250px'),
+            ]);
 
 
-        ]);
 
-                return $display;
+        return $display;
 
     }
 

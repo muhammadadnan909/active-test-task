@@ -238,7 +238,7 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'template' => SleepingOwl\Admin\Templates\TemplateDefault::class,
+    'template' => App\Admin\Templates\CustomTemplate::class,
 
 
     /*

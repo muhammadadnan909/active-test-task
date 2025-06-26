@@ -64,16 +64,16 @@ class HomeController extends Controller
         return view('posts.index', $data);
     }
 
-    public function destroy($id, $type)
+    public function destroy(Request $request, $id, $type)
     {
-        dd($id, $type);
-        if($type == 'post')
+        if($request->type == 'Post')
             $record = Post::findOrFail($id);
-        else if($type == 'folder')
+        else if($request->type  == 'Folder')
             $record = Folder::findOrFail($id);
 
         $record->delete();
-        return redirect()->back()->with('success',  ucfirst($type) .' deleted successfully.');
+        return redirect("/admin/posts")->with('success', ucfirst($type) . ' deleted successfully.');
+
     }
 
 
@@ -97,9 +97,9 @@ class HomeController extends Controller
             'content' => 'required|string',
         ]);
 
-        if($type == 'post')
+        if($type == 'Post')
             $record = Post::findOrFail($id);
-        else if($type == 'folder')
+        else if($type == 'Folder')
             $record = Folder::findOrFail($id);
 
         $record->title   = $request->input('title');
@@ -107,7 +107,8 @@ class HomeController extends Controller
         $record->role    = $this->role;
         $record->save();
 
-        return redirect()->route($this->role.'.home')->with('success', ucfirst($type).' updated successfully.');
+        return redirect('/admin/posts')->with('success', ucfirst($type).' updated successfully.');
+
     }
 
     public function create($type)
