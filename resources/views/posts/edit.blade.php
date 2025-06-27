@@ -3,8 +3,8 @@
 @section('content')
 <div class="container">
     <h2>Edit {{ ucfirst($type) }}</h2>
+    <form id="update-form" method="POST" action="{{ route($guard.'.posts.update', ['type' => $type, 'id' => $record->id]) }}">
 
-    <form method="POST" action="{{ route($guard.'.posts.update', ['type' => $type, 'id' => $record->id]) }}">
         @csrf
         @method('PUT')
 
@@ -18,8 +18,30 @@
             <textarea name="content" class="form-control" rows="5" required>{{ old('content', $record->content) }}</textarea>
         </div>
 
-        <button class="btn btn-primary">Update</button>
-        <a href="#" class="btn btn-secondary">Cancel</a>
+        <button type="button" class="btn btn-primary" onclick="confirmUpdate()">Update</button>
+        <a href="{{ route($guard.'.home') }}" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
+
+{{-- Include SweetAlert2 --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function confirmUpdate() {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to update the record?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#aaa',
+            confirmButtonText: 'Yes, update it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('update-form').submit();
+            }
+        });
+    }
+</script>
 @endsection
+

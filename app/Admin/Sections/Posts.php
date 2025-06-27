@@ -53,27 +53,28 @@ class Posts extends Section implements Initializable
             ->with('user')
             ->setColumns([
                 AdminColumn::text('id', 'ID')
-                    ->setHtmlAttribute('style', 'min-width: 50px; max-width: 70px;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;')
+                    ->setHtmlAttribute('style', 'min-width: 100%; max-width: 70px;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;')
                     ->setHtmlAttribute('class', 'text-center'),
 
                 AdminColumn::text('user.name', 'Username')
-                    ->setHtmlAttribute('style', 'min-width: 150px; max-width: 170px ;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'),
+                    ->setHtmlAttribute('style', 'min-width: 100%; max-width: 170px ;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'),
 
                 AdminColumn::text('title', 'Title')
-                    ->setHtmlAttribute('style', 'min-width: 300px;  max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'),
+                    ->setHtmlAttribute('style', 'min-width: 100%;  max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'),
 
                 AdminColumn::text('content', 'Content')
-                    ->setHtmlAttribute('style', 'min-width: 400px; max-width: 754px;  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'),
+                    ->setHtmlAttribute('style', 'min-width: 100%; max-width: 754px;  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'),
 
                 AdminColumn::datetime('created_at', 'Created At')
-                    ->setHtmlAttribute('style', 'min-width: 170px;  max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;')
+                    ->setHtmlAttribute('style', 'min-width: 100%;  max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;')
                     ->setFormat('Y-m-d H:i:s'),
 
                 AdminColumn::custom('Actions', function ($model) {
                         // some code...
-                })->setView('admin.columns.actions')
-                ->setHtmlAttribute('class', attribute: 'text-center')
-                ->setWidth('250px'),
+                })->setView(view: 'admin.columns.actions')
+                // ->setHtmlAttribute('class', attribute: 'text-center')
+                    ->setHtmlAttribute('style', 'max-width: 300px; min-width : 300px;')
+
 
             ]);
 
