@@ -50,14 +50,25 @@ class Posts extends Section implements Initializable
             ->setHtmlAttributes(['class' => 'table table-bordered'])
             ->setDisplaySearch(true)
             ->setDisplayLength(true)
-            ->with('user')
+            ->with(['user', 'admin'])
             ->setColumns([
                 AdminColumn::text('id', 'ID')
                     ->setHtmlAttribute('style', 'min-width: 100%; max-width: 70px;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;')
                     ->setHtmlAttribute('class', 'text-center'),
 
-                AdminColumn::text('user.name', 'Username')
-                    ->setHtmlAttribute('style', 'min-width: 100%; max-width: 170px ;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'),
+              AdminColumn::custom('Username', function ($model) {
+                        if ($model->role === 'admin' && $model->admin) {
+                                return $model->admin->full_name ?? 'No Name';
+                            }
+
+                            if ($model->role === 'user' && $model->user) {
+                                return $model->user->full_name ?? 'No Name';
+                            }
+
+
+                return 'N/A';
+
+            })->setHtmlAttribute('style', 'min-width: 170px; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'),
 
                 AdminColumn::text('title', 'Title')
                     ->setHtmlAttribute('style', 'min-width: 100%;  max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'),

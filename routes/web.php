@@ -16,40 +16,11 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-// Route::get('/admin/dashboard', function () {
-//     // Detect the current guard
-//     if (Auth::guard('admin')->check()) {
-//         return 'Logged in as: admin';
-//     } elseif (Auth::guard('user')->check()) {
-//         return 'Logged in as: user';
-//     } else {
-//         return 'Not authenticated';
-//     }
-// }); // or use 'auth:admin' if only for admin
-
-
-
-// Route::get('/test', function () {
-//       $admin = resolve(\SleepingOwl\Admin\Admin::class);
-//       $manager = $admin->model(\App\Models\Post::class);
-
-//     return $manager instanceof \SleepingOwl\Admin\Contracts\ModelConfigurationInterface
-//         ? '✅ Bound correctly'
-//         : '❌ Not bound';
-
-// });
-
-Route::get('/test', function () {
-    return view('vendor.sleepingowl.default.admin.columns.actions', ['model' => new \App\Models\Post()]);
-});
-
-
 Route::get('/', function () {
     return view('welcome');
 });
 
 Auth::routes();
-
 
 // Admin auth routes
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -57,13 +28,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('login', [LoginController::class, 'login']);
     Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
-    Route::get('register', [RegisterController::class, 'showRegisterForm'])->name('register');
+    Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
     Route::post('register', [RegisterController::class, 'register']);
+
+
 });
 
 Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('home', [HomeController::class, 'index'])->name('home');
-        Route::get('/posts/{type}/{id}/edit', [HomeController::class, 'edit'])->name('posts.edit');
+    Route::get('/posts/{type}/{id}/edit', [HomeController::class, 'edit'])->name('posts.edit');
 
 });
 

@@ -17,6 +17,7 @@ class LoginController extends Controller
 {
     //
      use AuthenticatesAdminUsers;
+    protected $redirectTo = RouteServiceProvider::HOME_ADMIN;
 
     protected function guard()
     {
