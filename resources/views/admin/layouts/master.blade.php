@@ -1,27 +1,18 @@
-{{-- <!-- ✅ Custom layout loaded -->
-@if (session('success'))
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: '{{ addslashes(session('success')) }}',
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'OK'
-        });
-    });
-</script>
-@endif --}}
-
-
 <!DOCTYPE html>
-<html>
+<html lang="{{ app()->getLocale() }}">
 <head>
-    <title>My Custom Admin Template</title>
+    {!! $template->renderMeta($title) !!}
+    {!! $template->renderStyles() !!}
 </head>
 <body>
-    <h1>This is my custom admin layout!</h1>
 
-    @yield('content')
+    {{-- Flash messages --}}
+    @include('admin.partials.flash')
+
+    <div class="container-fluid">
+        @yield('content')
+    </div>
+
+    {!! $template->renderScripts() !!}
 </body>
 </html>
